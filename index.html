@@ -1,0 +1,66 @@
+ <!DOCTYPE html>
+<html>
+    <head>
+        <title>Facebook Status Feeds</title>
+        <script>
+              window.fbAsyncInit = function() {
+                FB.init({
+                  appId      : '620772474751928',
+                  xfbml      : true,
+                  version    : 'v2.6'
+                });
+              };
+            
+              (function(d, s, id){
+                 var js, fjs = d.getElementsByTagName(s)[0];
+                 if (d.getElementById(id)) {return;}
+                 js = d.createElement(s); js.id = id;
+                 js.src = "//connect.facebook.net/en_US/sdk.js";
+                 fjs.parentNode.insertBefore(js, fjs);
+               }(document, 'script', 'facebook-jssdk'));
+        </script>
+    </head>
+    <body>
+        <h1>Facebook</h1>
+        <ul id="status">
+            
+        </ul>
+
+        <script type="text/javascript">
+            window.setTimeout(function(){
+                FB.getLoginStatus(function (auth) {
+                    console.log(auth.status)
+                    if(auth.status!="not_authorized"){
+                         FB.api("/me/posts", function(res){
+                            console.log(res);
+                             list(res.data)
+                         })
+                        return;
+                    }
+                    FB.login(function(){
+                        
+                        FB.api("/me/posts", function(res){
+                            console.log(res);
+                            list(res.data)
+                        })
+                        
+                    },{scope: "user_posts"})
+                   
+                })
+                
+                
+            }, 2000);
+            
+            function list(data) {
+                 
+                 var x = document.getElementById("status");
+                 for(var i=0; i<=data.length; i++){
+                     var nod = document.createElement('li');
+                     nod.innerHTML = data[i].story || data[i].message
+                     console.log(data[i].story || data[i].message)
+                     x.appendChild(nod);
+                }
+            }
+        </script>
+    </body>
+</html>
